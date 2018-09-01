@@ -46,16 +46,41 @@ def get_next_state(graph, node):
     else:
         return ''
 
+def players_turn(boardString):
+	print('Current Board State:')
+	print('  ',boardString[0],' | ',boardString[1],' | ', boardString[2],' ')
+	print(' -----+-----+----- ')
+	print('  ',boardString[3],' | ',boardString[4],' | ', boardString[5],' ')
+	print(' -----+-----+----- ')
+	print('  ',boardString[6],' | ',boardString[7],' | ', boardString[8],' ')
+	print('It is your turn. Enter your move by indexing into the board.')
+	print("Obey zero-indexing. for example, entering in '1 1' will choose the center tile.")
 
-print("Welcome to the Tic-Tac-Toe AI")
-print("Type 'X' or 'O' to choose what you play.")
+	return 0
+
+
+print("Hello, I am the Tic-Tac-Toe AI")
+print("Type 'X' or 'O' to choose what you will play.")
 G = nx.read_gexf("TicTacToeStates.gexf")
 player = input()
+boardString = '---------'
+turnOrder = 3
 while player != 'X' and player != 'O':
 	print("Input invalid. Please type 'X' or 'O' to choose what you play:")
 	player = input()
 
 if player is 'X':
-	print('X')
+	turnOrder = 0
+	players_turn(boardString)
+	moveX = int(input('horizontal index: '))
+	moveY = int(input('vertical index: '))
+	while( (moveX > 2) or (moveX < 0) or (moveY > 2) or (moveY < 0) or (boardString[moveX+moveY*3] != '-') ):
+		print("Index invalid, please enter a valid move.(remember it is zero-indexed)")
+	moveIndex = moveX + moveY*3
+	boardString[moveIndex] = 'X'
+
 if player is 'O':
-	print('O')
+	turnOrder = 1
+	boardString = get_next_state(G, boardString)
+
+players_turn(boardString)
